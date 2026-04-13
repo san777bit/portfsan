@@ -1,0 +1,192 @@
+/* ======================================================
+   HEADER
+   ====================================================== */
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 72px;
+  transition: background var(--transition), box-shadow var(--transition), backdrop-filter var(--transition);
+}
+
+.header--scrolled {
+  background: rgba(8, 11, 20, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* Logo */
+.header__logo {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+  transition: color var(--transition);
+}
+
+.header__logo:hover {
+  color: var(--accent);
+}
+
+.header__logo-bracket {
+  color: var(--accent);
+  font-weight: 400;
+}
+
+/* Desktop nav */
+.header__nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header__nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: color var(--transition), background var(--transition);
+  position: relative;
+}
+
+.header__nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width var(--transition);
+}
+
+.header__nav-link:hover,
+.header__nav-link.active {
+  color: var(--text-primary);
+}
+
+.header__nav-link.active::after,
+.header__nav-link:hover::after {
+  width: 20px;
+}
+
+.header__cta {
+  margin-left: 8px;
+  padding: 9px 20px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(100, 255, 218, 0.3);
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+.header__cta:hover {
+  background: rgba(100, 255, 218, 0.2);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(100, 255, 218, 0.2);
+}
+
+/* Burger */
+.header__burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 8px;
+}
+
+.header__burger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: transform var(--transition), opacity var(--transition);
+}
+
+.header__burger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.header__burger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.header__burger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile menu */
+.header__mobile-menu {
+  display: none;
+  flex-direction: column;
+  padding: 16px 24px 24px;
+  background: rgba(8, 11, 20, 0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border);
+  transform: translateY(-20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform var(--transition), opacity var(--transition);
+}
+
+.header__mobile-menu.open {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+.header__mobile-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-border);
+  transition: color var(--transition);
+}
+
+.header__mobile-link:last-child {
+  border-bottom: none;
+}
+
+.header__mobile-link:hover,
+.header__mobile-link.active {
+  color: var(--accent);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header__nav {
+    display: none;
+  }
+
+  .header__burger,
+  .header__mobile-menu {
+    display: flex;
+  }
+}
