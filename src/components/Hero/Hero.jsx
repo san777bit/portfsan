@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { personalInfo, socialLinks } from '../../data/config'
+import { useModal } from '../../context/ModalContext'
 import './Hero.css'
 
 const SocialIcon = ({ icon }) => {
@@ -30,6 +31,7 @@ const SocialIcon = ({ icon }) => {
 
 export default function Hero() {
   const canvasRef = useRef(null)
+  const { openModal } = useModal()
 
   // Animated particle background
   useEffect(() => {
@@ -142,9 +144,9 @@ export default function Hero() {
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </a>
-            <a href="#footer" className="hero__btn hero__btn--secondary">
+            <button className="hero__btn hero__btn--secondary" onClick={openModal}>
               Написать мне
-            </a>
+            </button>
           </div>
 
           {/* Socials */}

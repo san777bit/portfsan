@@ -1,0 +1,199 @@
+.cm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 11, 20, 0.85);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+.cm-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  animation: fadeInUp 0.25s ease;
+  box-shadow: var(--shadow-lg), 0 0 60px rgba(100, 255, 218, 0.05);
+}
+
+.cm-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition);
+}
+.cm-close:hover {
+  border-color: var(--color-border-hover);
+  color: var(--text-primary);
+}
+
+.cm-header {
+  margin-bottom: 28px;
+}
+
+.cm-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.cm-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cm-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.cm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cm-field label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.cm-field input,
+.cm-field textarea {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  padding: 11px 14px;
+  font-size: 14px;
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color var(--transition);
+  resize: none;
+}
+
+.cm-field input::placeholder,
+.cm-field textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.cm-field input:focus,
+.cm-field textarea:focus {
+  border-color: var(--accent);
+}
+
+.cm-field input:disabled,
+.cm-field textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cm-error {
+  color: #f87171;
+  font-size: 13px;
+  margin-top: -4px;
+}
+
+.cm-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #080b14;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 24px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: opacity var(--transition), transform var(--transition);
+  margin-top: 4px;
+}
+
+.cm-btn:hover:not(:disabled) {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.cm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cm-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(8, 11, 20, 0.3);
+  border-top-color: #080b14;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Success state */
+.cm-success {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.cm-success-icon {
+  width: 72px;
+  height: 72px;
+  background: var(--accent-dim);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: var(--accent);
+}
+
+.cm-success h3 {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.cm-success p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 520px) {
+  .cm-card {
+    padding: 28px 20px;
+  }
+}

@@ -1,4 +1,5 @@
 import { personalInfo, socialLinks } from '../../data/config'
+import { useModal } from '../../context/ModalContext'
 import './Footer.css'
 
 const SocialIcon = ({ icon }) => {
@@ -29,6 +30,7 @@ const SocialIcon = ({ icon }) => {
 
 export default function Footer() {
   const year = new Date().getFullYear()
+  const { openModal } = useModal()
 
   return (
     <footer id="footer" className="footer">
@@ -46,13 +48,12 @@ export default function Footer() {
             Открыт к сотрудничеству, фрилансу и интересным проектам.<br />
             Напишите — отвечу быстро!
           </p>
-          <a href={`mailto:${personalInfo.email}`} className="footer__cta-btn">
+          <button className="footer__cta-btn" onClick={openModal}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
-              <rect x="2" y="4" width="20" height="16" rx="2"/>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
-            {personalInfo.email}
-          </a>
+            Написать мне
+          </button>
         </div>
 
         {/* Divider */}

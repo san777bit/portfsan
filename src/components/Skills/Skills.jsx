@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { skillCategories } from '../../data/skills'
 import './Skills.css'
 
 function SkillBar({ name, level, animate }) {
@@ -29,7 +28,7 @@ function SkillCard({ category, animate }) {
       <div className="skill-card__bars">
         {category.skills.map((skill) => (
           <SkillBar
-            key={skill.name}
+            key={skill.id ?? skill.name}
             name={skill.name}
             level={skill.level}
             animate={animate}
@@ -43,7 +42,17 @@ function SkillCard({ category, animate }) {
 export default function Skills() {
   const ref = useRef(null)
   const [animate, setAnimate] = useState(false)
+  const [categories, setCategories] = useState([])
 
+  // Fetch skills from API
+  useEffect(() => {
+    fetch('/api/skills')
+      .then(r => r.json())
+      .then(data => setCategories(data.categories || []))
+      .catch(() => {})
+  }, [])
+
+  // Intersection observer — trigger animation when section is visible
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -58,9 +67,18 @@ export default function Skills() {
     return () => observer.disconnect()
   }, [])
 
+  // If data loads after section was already in view, animate immediately
+  useEffect(() => {
+    if (categories.length === 0) return
+    if (!ref.current) return
+    const rect = ref.current.getBoundingClientRect()
+    if (rect.top < window.innerHeight * 0.9) {
+      setAnimate(true)
+    }
+  }, [categories])
+
   return (
     <section id="skills" className="skills" ref={ref}>
-      {/* Background decoration */}
       <div className="skills__bg-grid" />
 
       <div className="container">
@@ -73,7 +91,7 @@ export default function Skills() {
         </div>
 
         <div className="skills__grid">
-          {skillCategories.map((cat, i) => (
+          {categories.map((cat, i) => (
             <SkillCard
               key={cat.title}
               category={cat}
@@ -83,7 +101,6 @@ export default function Skills() {
           ))}
         </div>
 
-        {/* Extra badges */}
         <div className="skills__badges">
           <p className="skills__badges-label">Также работаю с:</p>
           <div className="skills__badges-list">

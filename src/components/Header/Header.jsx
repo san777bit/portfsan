@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { navLinks, personalInfo } from '../../data/config'
+import { useModal } from '../../context/ModalContext'
 import './Header.css'
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('#hero')
+  const { openModal } = useModal()
 
   useEffect(() => {
     const onScroll = () => {
@@ -53,9 +55,9 @@ export default function Header() {
               {link.label}
             </a>
           ))}
-          <a href="#footer" className="header__cta">
+          <button className="header__cta" onClick={openModal}>
             Связаться
-          </a>
+          </button>
         </nav>
 
         {/* Burger (mobile) */}

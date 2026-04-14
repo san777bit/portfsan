@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { projects } from '../../data/projects'
+import { useState, useEffect } from 'react'
 import './Projects.css'
 
 const gradientMap = {
@@ -17,35 +16,28 @@ function ProjectCard({ project, index }) {
       className={`project-card ${project.featured ? 'project-card--featured' : ''}`}
       style={{ animationDelay: `${index * 0.08}s` }}
     >
-      {/* Illustration */}
       <div
         className="project-card__illustration"
-        style={{ background: gradientMap[project.gradient] }}
+        style={{ background: gradientMap[project.gradient] || gradientMap['gradient-1'] }}
       >
         <span className="project-card__emoji">{project.emoji}</span>
-
-        {/* Decorative shapes */}
         <div className="project-card__shape project-card__shape--1" />
         <div className="project-card__shape project-card__shape--2" />
-
         {project.featured && (
           <div className="project-card__featured-badge">Featured</div>
         )}
       </div>
 
-      {/* Content */}
       <div className="project-card__body">
         <h3 className="project-card__title">{project.title}</h3>
         <p className="project-card__desc">{project.description}</p>
 
-        {/* Tags */}
         <div className="project-card__tags">
           {project.tags.map((tag) => (
             <span key={tag} className="project-card__tag">{tag}</span>
           ))}
         </div>
 
-        {/* Links */}
         <div className="project-card__links">
           <a
             href={project.githubUrl}
@@ -77,10 +69,18 @@ function ProjectCard({ project, index }) {
 
 export default function Projects() {
   const [filter, setFilter] = useState('all')
+  const [projects, setProjects] = useState([])
+
+  useEffect(() => {
+    fetch('/api/projects')
+      .then(r => r.json())
+      .then(data => setProjects(data.projects || []))
+      .catch(() => {})
+  }, [])
 
   const filters = ['all', 'featured']
   const filtered = filter === 'featured'
-    ? projects.filter((p) => p.featured)
+    ? projects.filter(p => p.featured)
     : projects
 
   return (
@@ -96,7 +96,6 @@ export default function Projects() {
           </p>
         </div>
 
-        {/* Filter tabs */}
         <div className="projects__filters">
           {filters.map((f) => (
             <button
@@ -112,7 +111,6 @@ export default function Projects() {
           ))}
         </div>
 
-        {/* Grid */}
         <div className="projects__grid">
           {filtered.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />

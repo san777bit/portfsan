@@ -4,7 +4,7 @@
 
 export const personalInfo = {
   nickname: 'san777bit',
-  fullName: 'Александр',
+  fullName: 'Санжар',
   specialty: 'Full-Stack Developer',
   tagline: 'Создаю современные веб-приложения с чистым кодом и красивым UI',
   location: 'Russia',

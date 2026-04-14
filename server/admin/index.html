@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — portfsan</title>
+  <style>
+    :root {
+      --bg:#080b14; --surface:#111827; --surface-2:#1a2236;
+      --border:rgba(255,255,255,0.06); --border-h:rgba(100,255,218,0.3);
+      --accent:#64ffda; --accent-dim:rgba(100,255,218,0.12);
+      --accent2:#7c3aed; --danger:#f87171; --success:#4ade80;
+      --text:#e2e8f0; --text2:#94a3b8; --muted:#475569;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+    /* ─── Login ─────────────────────────────────────────────── */
+    .login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+    .login-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px;width:100%;max-width:360px}
+    .login-card h1{font-size:22px;font-weight:700;margin-bottom:6px}
+    .login-card p{color:var(--text2);font-size:14px;margin-bottom:28px}
+
+    /* ─── Form controls ─────────────────────────────────────── */
+    label{display:block;font-size:13px;color:var(--text2);margin-bottom:5px;font-weight:500}
+    input[type=text],input[type=password],input[type=url],textarea,select{
+      width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;
+      color:var(--text);padding:9px 12px;font-size:14px;font-family:inherit;outline:none;
+      transition:border-color .2s;resize:vertical}
+    input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+    input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
+    input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px;cursor:pointer}
+    .form-group{margin-bottom:14px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .field-inline{display:flex;align-items:center;gap:8px}
+
+    /* ─── Buttons ───────────────────────────────────────────── */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+      padding:9px 18px;border-radius:8px;font-size:14px;font-weight:600;font-family:inherit;
+      cursor:pointer;border:none;transition:opacity .2s,transform .15s}
+    .btn:hover:not(:disabled){opacity:.85;transform:translateY(-1px)}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .btn-primary{background:var(--accent);color:#080b14;width:100%;padding:11px}
+    .btn-sm{padding:5px 12px;font-size:12px;border-radius:6px}
+    .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text2)}
+    .btn-ghost:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+    .btn-danger{background:rgba(248,113,113,0.15);color:var(--danger);border:1px solid rgba(248,113,113,0.2)}
+    .btn-danger:hover:not(:disabled){background:rgba(248,113,113,0.25)}
+    .btn-edit{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(100,255,218,.2)}
+    .btn-cancel{background:transparent;border:1px solid var(--border);color:var(--text2);margin-top:8px;width:100%}
+
+    /* ─── Layout ─────────────────────────────────────────────── */
+    .dash{display:none}
+    .dash.active{display:flex;flex-direction:column;min-height:100vh}
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;
+      display:flex;align-items:center;justify-content:space-between}
+    .topbar h1{font-size:17px;font-weight:700}
+    .topbar span{color:var(--accent)}
+    .tabs{display:flex;gap:4px;margin-bottom:0;padding:20px 28px 0;background:var(--surface);border-bottom:1px solid var(--border)}
+    .tab-btn{padding:10px 20px;border:none;background:transparent;color:var(--text2);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
+    .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+    .tab-btn:hover{color:var(--text)}
+    .body{flex:1;padding:28px;max-width:1100px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+    .tab-content{display:none}
+    .tab-content.active{display:block}
+
+    /* ─── Panels ─────────────────────────────────────────────── */
+    .panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    .panel-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .panel-head h2{font-size:15px;font-weight:700}
+    .panel-body{padding:20px}
+    .two-col{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+
+    /* ─── Skills list ─────────────────────────────────────────── */
+    .cat-block{margin-bottom:20px}
+    .cat-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+      color:var(--muted);padding:0 0 8px;display:flex;align-items:center;gap:6px}
+    .skill-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;
+      background:var(--surface-2);border-radius:8px;margin-bottom:6px}
+    .skill-info{display:flex;align-items:center;gap:12px;flex:1}
+    .skill-name{font-size:14px;font-weight:500}
+    .skill-bar-wrap{flex:1;max-width:160px}
+    .skill-bar-bg{height:4px;background:var(--border);border-radius:4px;overflow:hidden}
+    .skill-bar-fill{height:100%;background:var(--accent);border-radius:4px}
+    .skill-pct{font-size:12px;color:var(--muted);min-width:30px;text-align:right}
+    .skill-actions{display:flex;gap:6px}
+    .level-display{font-size:14px;font-weight:600;color:var(--accent);min-width:36px;text-align:right}
+
+    /* ─── Projects list ──────────────────────────────────────── */
+    .proj-table{width:100%;border-collapse:collapse}
+    .proj-table th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;
+      text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border);
+      background:var(--surface-2)}
+    .proj-table td{padding:12px 14px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle}
+    .proj-table tr:last-child td{border-bottom:none}
+    .proj-table tr:hover td{background:rgba(255,255,255,.02)}
+    .proj-emoji{font-size:22px;line-height:1}
+    .proj-title{font-weight:600;font-size:14px}
+    .proj-desc{color:var(--text2);font-size:12px;margin-top:2px;max-width:280px}
+    .tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;
+      background:var(--accent-dim);color:var(--accent);margin:2px 2px 0 0}
+    .badge-feat{background:rgba(124,58,237,.15);color:#a78bfa;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+    .color-dot{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+
+    .client-row{ cursor:pointer }
+    .client-row:hover td{ background:rgba(100,255,218,.04) !important }
+    .client-task-preview{ color:var(--text2); font-size:12px; max-width:260px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis }
+
+    /* ─── Client popup ──────────────────────────────────────── */
+    .cl-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);
+      display:flex;align-items:center;justify-content:center;padding:20px;z-index:999;
+      opacity:0;pointer-events:none;transition:opacity .2s}
+    .cl-overlay.open{opacity:1;pointer-events:all}
+    .cl-card{background:var(--surface);border:1px solid var(--border-h);border-radius:16px;
+      width:100%;max-width:480px;max-height:90vh;overflow-y:auto;
+      transform:translateY(16px) scale(.97);transition:transform .2s;padding:0}
+    .cl-overlay.open .cl-card{transform:none}
+    .cl-card-head{display:flex;align-items:flex-start;justify-content:space-between;padding:22px 22px 0}
+    .cl-card-head h3{font-size:18px;font-weight:700;line-height:1.2}
+    .cl-close{background:none;border:none;cursor:pointer;color:var(--text2);font-size:22px;line-height:1;padding:0;transition:color .15s}
+    .cl-close:hover{color:var(--text)}
+    .cl-body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:16px}
+    .cl-field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px;display:block}
+    .cl-field p{font-size:14px;color:var(--text);line-height:1.6;white-space:pre-wrap;word-break:break-word}
+    .cl-field-contact{font-size:14px;color:var(--accent)}
+    .cl-meta{font-size:12px;color:var(--muted)}
+    .cl-footer{padding:0 22px 22px;display:flex;justify-content:flex-end}
+    .cl-task-box{background:var(--surface-2);border-radius:10px;padding:14px;font-size:14px;color:var(--text);line-height:1.7;white-space:pre-wrap;word-break:break-word}
+
+    .error-msg{color:var(--danger);font-size:13px;margin-top:8px}
+    .success-msg{color:var(--success);font-size:13px;margin-top:8px}
+    .editing-hint{font-size:12px;color:var(--accent);background:var(--accent-dim);padding:6px 12px;border-radius:6px;margin-bottom:10px}
+    .empty-state{text-align:center;padding:40px;color:var(--muted)}
+
+    @media(max-width:860px){.two-col{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.body{padding:16px}}
+  </style>
+</head>
+<body>
+
+<!-- Login -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <h1>&lt;<span style="color:#64ffda">admin</span>/&gt;</h1>
+    <p>Введите пароль для доступа к панели</p>
+    <div class="form-group">
+      <label>Пароль</label>
+      <input type="password" id="pwdInput" placeholder="••••••••" />
+    </div>
+    <div class="error-msg" id="loginError"></div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="doLogin()">Войти</button>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div class="dash" id="dashboard">
+  <div class="topbar">
+    <h1>&lt;<span>admin</span>/&gt;</h1>
+    <button class="btn btn-sm btn-ghost" onclick="doLogout()">Выйти</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('skills',this)">🖥️ Навыки</button>
+    <button class="tab-btn" onclick="switchTab('projects',this)">🚀 Проекты</button>
+    <button class="tab-btn" onclick="switchTab('clients',this)">📬 Заявки</button>
+  </div>
+
+  <div class="body">
+
+    <!-- ── SKILLS TAB ── -->
+    <div class="tab-content active" id="tab-skills">
+      <div class="two-col">
+
+        <!-- Form -->
+        <div class="panel">
+          <div class="panel-head"><h2 id="skill-form-title">Добавить навык</h2></div>
+          <div class="panel-body">
+            <div id="skill-editing-hint" class="editing-hint" style="display:none">Редактирование навыка</div>
+            <input type="hidden" id="skill-edit-id" />
+            <div class="form-group">
+              <label>Название</label>
+              <input type="text" id="skill-name" placeholder="React" maxlength="60" />
+            </div>
+            <div class="form-group">
+              <label>Категория</label>
+              <input type="text" id="skill-category" list="cat-suggestions"
+                placeholder="Frontend, Backend или своя…" maxlength="40" autocomplete="off" />
+              <datalist id="cat-suggestions"></datalist>
+            </div>
+            <div class="form-group">
+              <label>
+                Уровень &nbsp;
+                <span class="level-display" id="skill-level-val">80</span>%
+              </label>
+              <input type="range" id="skill-level" min="0" max="100" value="80"
+                oninput="document.getElementById('skill-level-val').textContent=this.value" />
+            </div>
+            <div class="error-msg" id="skill-error"></div>
+            <button class="btn btn-primary" id="skill-save-btn" onclick="saveSkill()">Добавить</button>
+            <button class="btn btn-cancel" id="skill-cancel-btn" style="display:none" onclick="cancelSkillEdit()">Отменить</button>
+          </div>
+        </div>
+
+        <!-- List -->
+        <div class="panel">
+          <div class="panel-head"><h2>Список навыков</h2></div>
+          <div class="panel-body" id="skills-list">
+            <div class="empty-state">Загрузка...</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── PROJECTS TAB ── -->
+    <div class="tab-content" id="tab-projects">
+
+      <!-- Form -->
+      <div class="panel" style="margin-bottom:20px">
+        <div class="panel-head"><h2 id="proj-form-title">Добавить проект</h2></div>
+        <div class="panel-body">
+          <div id="proj-editing-hint" class="editing-hint" style="display:none">Редактирование проекта</div>
+          <input type="hidden" id="proj-edit-id" />
+          <div class="form-row">
+            <div class="form-group">
+              <label>Название *</label>
+              <input type="text" id="proj-title" placeholder="My Project" maxlength="80" />
+            </div>
+            <div class="form-group">
+              <label>Emoji</label>
+              <input type="text" id="proj-emoji" placeholder="🚀" maxlength="4" style="font-size:20px;text-align:center" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Описание *</label>
+            <textarea id="proj-desc" rows="2" placeholder="Краткое описание проекта..." maxlength="300"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>GitHub URL</label>
+              <input type="url" id="proj-github" placeholder="https://github.com/..." />
+            </div>
+            <div class="form-group">
+              <label>Live URL</label>
+              <input type="url" id="proj-live" placeholder="https://..." />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Теги <span style="color:var(--muted);font-weight:400">(через запятую)</span></label>
+              <input type="text" id="proj-tags" placeholder="React, Node.js, CSS" />
+            </div>
+            <div class="form-group">
+              <label>Цвет карточки</label>
+              <select id="proj-gradient">
+                <option value="gradient-1">🔵 Синий</option>
+                <option value="gradient-2">🟣 Фиолетовый</option>
+                <option value="gradient-3">🟢 Зелёный</option>
+                <option value="gradient-4">🩷 Розовый</option>
+                <option value="gradient-5">🟠 Оранжевый</option>
+                <option value="gradient-6">🔷 Тёмно-синий</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="field-inline">
+              <input type="checkbox" id="proj-featured" />
+              Избранный проект (Featured)
+            </label>
+          </div>
+          <div class="error-msg" id="proj-error"></div>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-primary" id="proj-save-btn" onclick="saveProject()" style="flex:1">Добавить</button>
+            <button class="btn btn-cancel" id="proj-cancel-btn" style="display:none;width:auto;flex:0 0 auto;margin-top:0" onclick="cancelProjEdit()">Отменить</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="panel">
+        <div class="panel-head"><h2>Список проектов</h2></div>
+        <div style="overflow-x:auto">
+          <table class="proj-table">
+            <thead>
+              <tr>
+                <th>Проект</th>
+                <th>Теги</th>
+                <th>Ссылки</th>
+                <th>Статус</th>
+                <th style="width:110px">Действия</th>
+              </tr>
+            </thead>
+            <tbody id="projects-list">
+              <tr><td colspan="5" class="empty-state">Загрузка...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CLIENTS TAB ── -->
+    <div class="tab-content" id="tab-clients">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Заявки с формы</h2>
+          <button class="btn btn-sm btn-ghost" onclick="loadClients()">↺ Обновить</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="proj-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Имя</th>
+                <th>Контакт</th>
+                <th>Задача</th>
+                <th>Дата</th>
+                <th style="width:60px"></th>
+              </tr>
+            </thead>
+            <tbody id="clients-list">
+              <tr><td colspan="6" class="empty-state">Загрузка...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Client detail popup -->
+<div class="cl-overlay" id="clOverlay" onclick="onOverlayClick(event)">
+  <div class="cl-card" id="clCard">
+    <div class="cl-card-head">
+      <h3 id="cl-name"></h3>
+      <button class="cl-close" onclick="closeClientModal()">×</button>
+    </div>
+    <div class="cl-body">
+      <div class="cl-field">
+        <label>Контакт</label>
+        <p class="cl-field-contact" id="cl-contact"></p>
+      </div>
+      <div class="cl-field">
+        <label>Задача / сообщение</label>
+        <div class="cl-task-box" id="cl-task"></div>
+      </div>
+      <p class="cl-meta" id="cl-date"></p>
+    </div>
+    <div class="cl-footer">
+      <button class="btn btn-sm btn-danger" id="cl-del-btn">🗑 Удалить заявку</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const TOKEN_KEY = 'admin_token'
+const getToken  = () => sessionStorage.getItem(TOKEN_KEY)
+const setToken  = t  => sessionStorage.setItem(TOKEN_KEY, t)
+const clearToken= () => sessionStorage.removeItem(TOKEN_KEY)
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+
+// ── Auth ────────────────────────────────────────────────────────────────────
+
+document.getElementById('pwdInput').addEventListener('keydown', e => { if(e.key==='Enter') doLogin() })
+
+async function doLogin(){
+  const pwd = document.getElementById('pwdInput').value
+  const err = document.getElementById('loginError')
+  if(!pwd){ err.textContent='Введите пароль'; return }
+  err.textContent=''
+  try{
+    const res  = await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pwd})})
+    const data = await res.json()
+    if(!res.ok){ err.textContent=data.error||'Ошибка'; return }
+    setToken(data.token)
+    showDash()
+  }catch{ err.textContent='Нет соединения' }
+}
+
+function doLogout(){ clearToken(); location.reload() }
+
+function showDash(){
+  document.getElementById('loginWrap').style.display='none'
+  document.getElementById('dashboard').classList.add('active')
+  loadSkills(); loadProjects(); loadClients()
+}
+
+if(getToken()) showDash()
+
+// ── Tabs ────────────────────────────────────────────────────────────────────
+
+function switchTab(name, btn){
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'))
+  btn.classList.add('active')
+  document.getElementById('tab-'+name).classList.add('active')
+}
+
+// ── SKILLS ─────────────────────────────────────────────────────────────────
+
+let allSkills = []
+
+async function loadSkills(){
+  try{
+    const res  = await fetch('/api/admin/skills',{headers:{Authorization:'Bearer '+getToken()}})
+    const data = await res.json()
+    if(res.status===401){ doLogout(); return }
+    allSkills = data.skills||[]
+    renderSkills()
+  }catch{ document.getElementById('skills-list').innerHTML='<div class="empty-state">Ошибка загрузки</div>' }
+}
+
+function updateCatSuggestions(){
+  const cats = [...new Set(allSkills.map(s=>s.category))]
+  document.getElementById('cat-suggestions').innerHTML = cats.map(c=>`<option value="${esc(c)}">`).join('')
+}
+
+function renderSkills(){
+  const el = document.getElementById('skills-list')
+  updateCatSuggestions()
+  if(!allSkills.length){ el.innerHTML='<div class="empty-state">Навыков нет</div>'; return }
+  const cats = {}
+  allSkills.forEach(s=>{ if(!cats[s.category]) cats[s.category]=[]; cats[s.category].push(s) })
+  const icons = {Frontend:'🖥️', Backend:'⚙️', 'Инструменты':'🛠️'}
+  el.innerHTML = Object.entries(cats).map(([cat, skills])=>`
+    <div class="cat-block">
+      <div class="cat-label">${icons[cat]||'💡'} ${esc(cat)}</div>
+      ${skills.map(s=>`
+        <div class="skill-row">
+          <div class="skill-info">
+            <span class="skill-name">${esc(s.name)}</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:${s.level}%"></div></div>
+            </div>
+            <span class="skill-pct">${s.level}%</span>
+          </div>
+          <div class="skill-actions">
+            <button class="btn btn-sm btn-edit" onclick="editSkill(${s.id})">✏️</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteSkill(${s.id},'${esc(s.name)}')">🗑</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('')
+}
+
+async function saveSkill(){
+  const id  = document.getElementById('skill-edit-id').value
+  const name= document.getElementById('skill-name').value.trim()
+  const cat = document.getElementById('skill-category').value
+  const lvl = document.getElementById('skill-level').value
+  const err = document.getElementById('skill-error')
+  if(!name){ err.textContent='Введите название'; return }
+  err.textContent=''
+  const method = id ? 'PUT' : 'POST'
+  const url    = id ? `/api/admin/skills/${id}` : '/api/admin/skills'
+  try{
+    const res = await fetch(url,{method,headers:{'Content-Type':'application/json',Authorization:'Bearer '+getToken()},body:JSON.stringify({name,category:cat,level:lvl})})
+    if(!res.ok){ err.textContent=(await res.json()).error; return }
+    cancelSkillEdit(); loadSkills()
+  }catch{ err.textContent='Ошибка сервера' }
+}
+
+function editSkill(id){
+  const s = allSkills.find(x=>x.id===id); if(!s) return
+  document.getElementById('skill-edit-id').value   = id
+  document.getElementById('skill-name').value      = s.name
+  document.getElementById('skill-category').value  = s.category
+  document.getElementById('skill-level').value     = s.level
+  document.getElementById('skill-level-val').textContent = s.level
+  document.getElementById('skill-form-title').textContent = 'Редактировать навык'
+  document.getElementById('skill-editing-hint').style.display = 'block'
+  document.getElementById('skill-save-btn').textContent   = 'Сохранить'
+  document.getElementById('skill-cancel-btn').style.display = 'block'
+  document.getElementById('skill-name').focus()
+}
+
+function cancelSkillEdit(){
+  document.getElementById('skill-edit-id').value = ''
+  document.getElementById('skill-name').value    = ''
+  document.getElementById('skill-category').value= ''
+  document.getElementById('skill-level').value   = '80'
+  document.getElementById('skill-level-val').textContent = '80'
+  document.getElementById('skill-form-title').textContent  = 'Добавить навык'
+  document.getElementById('skill-editing-hint').style.display = 'none'
+  document.getElementById('skill-save-btn').textContent    = 'Добавить'
+  document.getElementById('skill-cancel-btn').style.display = 'none'
+  document.getElementById('skill-error').textContent = ''
+}
+
+async function deleteSkill(id, name){
+  if(!confirm(`Удалить навык «${name}»?`)) return
+  try{
+    await fetch(`/api/admin/skills/${id}`,{method:'DELETE',headers:{Authorization:'Bearer '+getToken()}})
+    loadSkills()
+  }catch{ alert('Ошибка удаления') }
+}
+
+// ── PROJECTS ────────────────────────────────────────────────────────────────
+
+let allProjects = []
+
+async function loadProjects(){
+  try{
+    const res  = await fetch('/api/admin/projects',{headers:{Authorization:'Bearer '+getToken()}})
+    const data = await res.json()
+    if(res.status===401){ doLogout(); return }
+    allProjects = data.projects||[]
+    renderProjects()
+  }catch{ document.getElementById('projects-list').innerHTML='<tr><td colspan="5" class="empty-state">Ошибка загрузки</td></tr>' }
+}
+
+const gradColors = {
+  'gradient-1':'#1e3a5f','gradient-2':'#2d1b69','gradient-3':'#1a3a2e',
+  'gradient-4':'#3a1a2e','gradient-5':'#3a2a1a','gradient-6':'#1a2a3a'
+}
+
+function renderProjects(){
+  const el = document.getElementById('projects-list')
+  if(!allProjects.length){ el.innerHTML='<tr><td colspan="5" class="empty-state">Проектов нет</td></tr>'; return }
+  const tags = p => (Array.isArray(p.tags) ? p.tags : JSON.parse(p.tags||'[]'))
+  el.innerHTML = allProjects.map(p=>`
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="proj-emoji">${esc(p.emoji)}</span>
+          <div>
+            <div class="proj-title">${esc(p.title)}</div>
+            <div class="proj-desc">${esc(p.description)}</div>
+          </div>
+        </div>
+      </td>
+      <td>${tags(p).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</td>
+      <td style="font-size:12px">
+        ${p.github_url ? `<a href="${esc(p.github_url)}" target="_blank" style="color:var(--accent);display:block">GitHub</a>` : ''}
+        ${p.live_url && p.live_url!=='#' ? `<a href="${esc(p.live_url)}" target="_blank" style="color:var(--text2);display:block">Live</a>` : ''}
+      </td>
+      <td>${p.featured ? '<span class="badge-feat">Featured</span>' : '<span style="color:var(--muted);font-size:12px">обычный</span>'}</td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-sm btn-edit" onclick="editProject(${p.id})">✏️</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteProject(${p.id},'${esc(p.title)}')">🗑</button>
+        </div>
+      </td>
+    </tr>
+  `).join('')
+}
+
+async function saveProject(){
+  const id    = document.getElementById('proj-edit-id').value
+  const title = document.getElementById('proj-title').value.trim()
+  const desc  = document.getElementById('proj-desc').value.trim()
+  const err   = document.getElementById('proj-error')
+  if(!title||!desc){ err.textContent='Заполните название и описание'; return }
+  err.textContent=''
+  const body = {
+    title, description:desc,
+    emoji:    document.getElementById('proj-emoji').value||'🚀',
+    gradient: document.getElementById('proj-gradient').value,
+    tags:     document.getElementById('proj-tags').value,
+    github_url: document.getElementById('proj-github').value,
+    live_url:   document.getElementById('proj-live').value,
+    featured:   document.getElementById('proj-featured').checked,
+  }
+  const method = id ? 'PUT' : 'POST'
+  const url    = id ? `/api/admin/projects/${id}` : '/api/admin/projects'
+  try{
+    const res = await fetch(url,{method,headers:{'Content-Type':'application/json',Authorization:'Bearer '+getToken()},body:JSON.stringify(body)})
+    if(!res.ok){ err.textContent=(await res.json()).error; return }
+    cancelProjEdit(); loadProjects()
+  }catch{ err.textContent='Ошибка сервера' }
+}
+
+function editProject(id){
+  const p = allProjects.find(x=>x.id===id); if(!p) return
+  const tags = Array.isArray(p.tags) ? p.tags.join(', ') : JSON.parse(p.tags||'[]').join(', ')
+  document.getElementById('proj-edit-id').value     = id
+  document.getElementById('proj-title').value       = p.title
+  document.getElementById('proj-desc').value        = p.description
+  document.getElementById('proj-emoji').value       = p.emoji
+  document.getElementById('proj-gradient').value    = p.gradient
+  document.getElementById('proj-tags').value        = tags
+  document.getElementById('proj-github').value      = p.github_url||''
+  document.getElementById('proj-live').value        = p.live_url||''
+  document.getElementById('proj-featured').checked  = Boolean(p.featured)
+  document.getElementById('proj-form-title').textContent  = 'Редактировать проект'
+  document.getElementById('proj-editing-hint').style.display = 'block'
+  document.getElementById('proj-save-btn').textContent    = 'Сохранить'
+  document.getElementById('proj-cancel-btn').style.display = 'block'
+  document.getElementById('proj-title').focus()
+  document.querySelector('#tab-projects').scrollIntoView({behavior:'smooth',block:'start'})
+}
+
+function cancelProjEdit(){
+  ['proj-edit-id','proj-title','proj-desc','proj-emoji','proj-tags','proj-github','proj-live'].forEach(id=>document.getElementById(id).value='')
+  document.getElementById('proj-gradient').value  = 'gradient-1'
+  document.getElementById('proj-featured').checked= false
+  document.getElementById('proj-emoji').value     = ''
+  document.getElementById('proj-form-title').textContent  = 'Добавить проект'
+  document.getElementById('proj-editing-hint').style.display = 'none'
+  document.getElementById('proj-save-btn').textContent    = 'Добавить'
+  document.getElementById('proj-cancel-btn').style.display = 'none'
+  document.getElementById('proj-error').textContent = ''
+}
+
+async function deleteProject(id, title){
+  if(!confirm(`Удалить проект «${title}»?`)) return
+  try{
+    await fetch(`/api/admin/projects/${id}`,{method:'DELETE',headers:{Authorization:'Bearer '+getToken()}})
+    loadProjects()
+  }catch{ alert('Ошибка удаления') }
+}
+
+// ── CLIENTS ─────────────────────────────────────────────────────────────────
+
+let allClients = []
+
+async function loadClients(){
+  try{
+    const res  = await fetch('/api/admin/clients',{headers:{Authorization:'Bearer '+getToken()}})
+    const data = await res.json()
+    if(res.status===401){ doLogout(); return }
+    allClients = data.clients||[]
+    renderClients()
+  }catch{ document.getElementById('clients-list').innerHTML='<tr><td colspan="6" class="empty-state">Ошибка загрузки</td></tr>' }
+}
+
+function renderClients(){
+  const el = document.getElementById('clients-list')
+  if(!allClients.length){ el.innerHTML='<tr><td colspan="6" class="empty-state">Заявок пока нет</td></tr>'; return }
+  el.innerHTML = allClients.map(c=>`
+    <tr class="client-row" onclick="openClientModal(${c.id})">
+      <td style="color:var(--muted);font-size:12px">${c.id}</td>
+      <td style="font-weight:600">${esc(c.name)}</td>
+      <td style="font-size:13px;color:var(--text2)">${esc(c.contact)}</td>
+      <td><div class="client-task-preview">${esc(c.task)}</div></td>
+      <td style="font-size:12px;color:var(--muted);white-space:nowrap">${(c.created_at||'').slice(0,16).replace('T',' ')}</td>
+      <td onclick="event.stopPropagation()">
+        <button class="btn btn-sm btn-danger" onclick="deleteClient(${c.id})">🗑</button>
+      </td>
+    </tr>
+  `).join('')
+}
+
+function openClientModal(id){
+  const c = allClients.find(x=>x.id===id); if(!c) return
+  document.getElementById('cl-name').textContent    = c.name
+  document.getElementById('cl-contact').textContent = c.contact
+  document.getElementById('cl-task').textContent    = c.task
+  document.getElementById('cl-date').textContent    = 'Получена: ' + (c.created_at||'').slice(0,16).replace('T',' ')
+  const delBtn = document.getElementById('cl-del-btn')
+  delBtn.onclick = () => { closeClientModal(); deleteClient(id) }
+  document.getElementById('clOverlay').classList.add('open')
+  document.body.style.overflow = 'hidden'
+}
+
+function closeClientModal(){
+  document.getElementById('clOverlay').classList.remove('open')
+  document.body.style.overflow = ''
+}
+
+function onOverlayClick(e){
+  if(e.target === document.getElementById('clOverlay')) closeClientModal()
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeClientModal() })
+
+async function deleteClient(id){
+  if(!confirm('Удалить заявку?')) return
+  try{
+    await fetch(`/api/admin/clients/${id}`,{method:'DELETE',headers:{Authorization:'Bearer '+getToken()}})
+    loadClients()
+  }catch{ alert('Ошибка удаления') }
+}
+</script>
+</body>
+</html>

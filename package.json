@@ -1,1 +1,25 @@
-{"name":"portfsan","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite","build":"vite build","preview":"vite preview"},"dependencies":{"react":"^18.3.1","react-dom":"^18.3.1"},"devDependencies":{"@types/react":"^18.3.1","@types/react-dom":"^18.3.1","@vitejs/plugin-react":"^4.3.4","vite":"^6.0.5"}}
+{
+  "name": "portfsan",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:server": "node --watch server/index.js",
+    "dev:all": "concurrently -n VITE,API -c cyan,magenta \"npm run dev\" \"npm run dev:server\"",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.2.1",
+    "vite": "^6.0.5"
+  }
+}
