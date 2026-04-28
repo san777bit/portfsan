@@ -7,7 +7,7 @@ export const personalInfo = {
   fullName: 'Санжар',
   specialty: 'Full-Stack Developer',
   tagline: 'Создаю современные веб-приложения с чистым кодом и красивым UI',
-  location: 'Russia',
+  location: 'kazakhstan',
   email: 'san777bit@example.com',
   availableForWork: true,
 }

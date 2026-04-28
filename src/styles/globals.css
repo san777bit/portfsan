@@ -1,42 +1,68 @@
 /* ======================================================
-   GLOBAL STYLES — базовые стили и CSS переменные
+   GLOBAL STYLES — WEIRDCORE / 2000s WINDOW AESTHETIC
    ====================================================== */
 
 :root {
-  /* Colors */
-  --color-bg: #080b14;
-  --color-bg-2: #0d1117;
-  --color-surface: #111827;
-  --color-surface-2: #1a2236;
-  --color-border: rgba(255, 255, 255, 0.06);
-  --color-border-hover: rgba(100, 255, 218, 0.3);
+  /* === BLUE BASE === */
+  --color-bg: #071a2e;
+  --color-bg-2: #091f38;
+  --color-surface: #0d2a52;
+  --color-surface-2: #102e5c;
+  --color-border: rgba(98, 184, 232, 0.18);
+  --color-border-hover: rgba(98, 184, 232, 0.55);
 
-  /* Accent */
-  --accent: #64ffda;
-  --accent-dim: rgba(100, 255, 218, 0.12);
-  --accent-2: #7c3aed;
-  --accent-2-dim: rgba(124, 58, 237, 0.15);
+  /* Sky blue (primary) */
+  --accent: #62b8e8;
+  --accent-dim: rgba(98, 184, 232, 0.09);
+  --accent-glow: rgba(98, 184, 232, 0.28);
+
+  /* Yellow (secondary accent — title bar accents only) */
+  --accent-2: #f0c040;
+  --accent-2-dim: rgba(240, 192, 64, 0.08);
+  --accent-2-glow: rgba(240, 192, 64, 0.3);
+
+  /* Chromatic aberration helpers */
+  --accent-red: #e84848;
+  --accent-cyan: #40d8e0;
+
+  /* 2000s window chrome — Hero renderer (keep XP Luna style) */
+  --win-titlebar: linear-gradient(180deg, #5a98d0 0%, #2e6db4 100%);
+  --win-titlebar-inactive: linear-gradient(180deg, #848484 0%, #686868 100%);
+  --win-titlebar-text: #ffffff;
+  --win-toolbar: #d4d0c8;
+  --win-toolbar-border: #a0a0a0;
+  --win-border-light: #d4d4d4;
+  --win-border-dark: #666666;
+  --win-btn-r: #c84040;
+  --win-btn-y: #c8a020;
+  --win-btn-g: #40a840;
+
+  /* Win98 classic chrome — project/skill cards */
+  --win-98-titlebar: linear-gradient(to right, #000080, #1084d0);
+  --win-98-gray: #c0c0c0;
+  --win-98-bevel-light: #ffffff;
+  --win-98-bevel-dark: #808080;
 
   /* Text */
-  --text-primary: #e2e8f0;
-  --text-secondary: #94a3b8;
-  --text-muted: #475569;
+  --text-primary: #dceefa;
+  --text-secondary: #6a9ec0;
+  --text-muted: #335070;
 
   /* Gradients */
-  --gradient-hero: linear-gradient(135deg, #080b14 0%, #0d1117 50%, #111827 100%);
-  --gradient-accent: linear-gradient(135deg, #64ffda, #7c3aed);
-  --gradient-card-1: linear-gradient(135deg, #1e3a5f, #1a2a4a);
-  --gradient-card-2: linear-gradient(135deg, #2d1b69, #1e1040);
-  --gradient-card-3: linear-gradient(135deg, #1a3a2e, #0f2a20);
-  --gradient-card-4: linear-gradient(135deg, #3a1a2e, #2a0f20);
-  --gradient-card-5: linear-gradient(135deg, #3a2a1a, #2a1a0f);
-  --gradient-card-6: linear-gradient(135deg, #1a2a3a, #0f1a2a);
+  --gradient-hero: linear-gradient(180deg, #071a2e 0%, #091f38 100%);
+  --gradient-accent: linear-gradient(135deg, #62b8e8, #40d8e0);
+  --gradient-card-1: linear-gradient(135deg, #0d2a52, #091f38);
+  --gradient-card-2: linear-gradient(135deg, #102050, #0a1e40);
+  --gradient-card-3: linear-gradient(135deg, #0e2848, #091e3a);
+  --gradient-card-4: linear-gradient(135deg, #0c2248, #081a38);
+  --gradient-card-5: linear-gradient(135deg, #0d2550, #09213e);
+  --gradient-card-6: linear-gradient(135deg, #0f2c56, #0a2244);
 
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.5);
-  --shadow-accent: 0 0 40px rgba(100, 255, 218, 0.1);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.9);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.95);
+  --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.98);
+  --shadow-accent: 0 0 30px rgba(98, 184, 232, 0.1);
 
   /* Spacing */
   --section-padding: 100px 0;
@@ -44,11 +70,12 @@
 
   /* Typography */
   --font-body: 'Inter', system-ui, sans-serif;
-  --font-heading: 'Space Grotesk', system-ui, sans-serif;
+  --font-heading: 'VT323', 'Courier New', monospace;
+  --font-mono: 'Share Tech Mono', 'Courier New', monospace;
 
   /* Animation */
-  --transition: 0.3s ease;
-  --transition-slow: 0.6s ease;
+  --transition: 0.2s ease;
+  --transition-slow: 0.4s ease;
 }
 
 *, *::before, *::after {
@@ -57,121 +84,194 @@
   padding: 0;
 }
 
-button {
-  font-family: inherit;
-  font-size: inherit;
-  cursor: pointer;
-}
+button { font-family: inherit; font-size: inherit; cursor: pointer; }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 72px;
+  scroll-padding-top: 60px;
 }
 
 body {
   font-family: var(--font-body);
-  background-color: var(--color-bg);
+  background-color: #2a6010;
+  background-image:
+    /* CRT scanlines — topmost */
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px, transparent 2px,
+      rgba(0, 0, 0, 0.08) 2px, rgba(0, 0, 0, 0.08) 4px
+    ),
+    /* Dark overlay */
+    linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+    /* XP room wallpaper */
+    url('/xp-bg.jpg');
+  background-size: auto, auto, cover;
+  background-position: 0 0, 0 0, center center;
+  background-attachment: fixed;
   color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
+/* ── Chromatic aberration — red channel shifted +2px right ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(to bottom,
+    rgba(180, 30, 30, 0.055) 0%,
+    rgba(30, 30, 200, 0.055) 100%
+  );
+  transform: translateX(2px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 9997;
+}
+
+/* ── Organic film grain — SVG fractalNoise ── */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+@media (max-width: 640px) {
+  body::after { opacity: 0.07; }
+}
+
 /* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-bg);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--accent-2);
-  border-radius: 3px;
-}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: rgba(98, 184, 232, 0.3); border-radius: 0; }
 
-/* Selection */
-::selection {
-  background: rgba(100, 255, 218, 0.2);
-  color: var(--accent);
-}
+::selection { background: rgba(98, 184, 232, 0.2); color: var(--accent); }
 
-/* Container utility */
 .container {
   max-width: var(--container-width);
   margin: 0 auto;
   padding: 0 24px;
 }
 
-/* Section title */
-.section-title {
-  font-family: var(--font-heading);
-  font-size: clamp(28px, 4vw, 40px);
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 12px;
-  position: relative;
-}
-
-.section-subtitle {
-  color: var(--text-secondary);
-  font-size: 16px;
-  max-width: 540px;
-}
-
-.section-header {
-  margin-bottom: 60px;
-}
-
+/* ── Section typography ── */
 .section-label {
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 2px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 12px;
   display: block;
+  opacity: 0.75;
 }
 
-/* Fade-in animation */
+.section-label::before { content: '> '; opacity: 0.5; }
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: clamp(44px, 5.5vw, 68px);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.section-subtitle {
+  color: var(--text-secondary);
+  font-size: 13px;
+  max-width: 540px;
+  font-family: var(--font-mono);
+  line-height: 1.7;
+}
+
+.section-header { margin-bottom: 56px; }
+
+/* ── Shared Win98 window chrome — square pixel buttons ── */
+.win-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 0;
+  border: 1px solid #808080;
+  flex-shrink: 0;
+}
+.win-btn--r { background: var(--win-btn-r); }
+.win-btn--y { background: var(--win-btn-y); }
+.win-btn--g { background: var(--win-btn-g); }
+
+/* ── Animations ── */
+@keyframes glitch {
+  0%, 84%, 100% { text-shadow: none; transform: translateX(0); }
+  85% { text-shadow: -3px 0 var(--accent-red), 3px 0 var(--accent); transform: translateX(-2px); }
+  86% { text-shadow: 4px 0 var(--accent-red), -4px 0 var(--accent-cyan); transform: translateX(3px); }
+  87% { text-shadow: -2px 0 var(--accent-red), 2px 0 var(--accent); transform: translateX(-1px); }
+  88% { text-shadow: none; transform: translateX(0); }
+  93% { text-shadow: 2px 0 var(--accent-cyan), -2px 0 var(--accent-red); transform: translateX(2px); }
+  94% { text-shadow: none; transform: translateX(0); }
+}
+
+@keyframes glitch-fast {
+  0%, 100% { text-shadow: none; transform: translateX(0); }
+  25% { text-shadow: -2px 0 var(--accent-red), 2px 0 var(--accent); transform: translateX(-2px); }
+  50% { text-shadow: 3px 0 var(--accent-red), -3px 0 var(--accent-cyan); transform: translateX(2px); }
+  75% { text-shadow: none; transform: translateX(0); }
+}
+
+@keyframes cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
+  50%       { transform: translateY(-10px); }
 }
 
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(100, 255, 218, 0.2); }
-  50% { box-shadow: 0 0 40px rgba(100, 255, 218, 0.5); }
+@keyframes sphere-float {
+  0%, 100% { transform: translate(-50%, -52%) translateY(0); }
+  50%       { transform: translate(-50%, -52%) translateY(-10px); }
 }
 
-@keyframes rotate {
+@keyframes geo-spin {
   from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  to   { transform: rotate(360deg); }
 }
 
-/* Noise texture overlay */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.4;
+@keyframes orbit-glow {
+  0%, 100% { opacity: 0.35; }
+  50%       { opacity: 0.65; }
+}
+
+@keyframes pulse-blue {
+  0%, 100% { box-shadow: 0 0 6px var(--accent); }
+  50%       { box-shadow: 0 0 18px var(--accent), 0 0 40px rgba(98,184,232,0.3); }
+}
+
+@keyframes scrollWheel {
+  0%   { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(10px); opacity: 0; }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes cube-spin {
+  from { transform: rotateX(-18deg) rotateY(0deg); }
+  to   { transform: rotateX(-18deg) rotateY(360deg); }
 }

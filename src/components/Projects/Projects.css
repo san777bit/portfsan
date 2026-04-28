@@ -1,19 +1,19 @@
 /* ======================================================
-   PROJECTS SECTION
+   PROJECTS — WIN98 MICROSOFT PAINT WINDOW STYLE
    ====================================================== */
 
 .projects {
   position: relative;
   padding: var(--section-padding);
-  background: var(--color-bg);
+  background: transparent;
   overflow: hidden;
 }
 
 .projects__orb {
   position: absolute;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.06) 0%, transparent 70%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(98, 184, 232, 0.03) 0%, transparent 70%);
   top: 50%;
   right: -200px;
   transform: translateY(-50%);
@@ -21,169 +21,208 @@
   border-radius: 50%;
 }
 
-/* Filters */
+/* ── Filters — Win98 bevel buttons ── */
 .projects__filters {
   display: flex;
   gap: 8px;
-  margin-bottom: 48px;
+  margin-bottom: 40px;
 }
 
 .projects__filter {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  font-weight: 500;
+  padding: 5px 14px;
+  background: var(--win-98-gray);
+  border: 2px solid;
+  border-color: var(--win-98-bevel-light) var(--win-98-bevel-dark) var(--win-98-bevel-dark) var(--win-98-bevel-light);
+  border-radius: 0;
+  color: #000000;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: all var(--transition);
-  font-family: var(--font-body);
+  transition: background var(--transition);
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.8), 2px 2px 0 rgba(0,0,0,0.3);
 }
 
 .projects__filter:hover {
-  color: var(--text-primary);
-  border-color: rgba(255,255,255,0.15);
+  background: #d0d0d0;
 }
 
+.projects__filter:active,
 .projects__filter.active {
-  background: var(--accent-dim);
-  border-color: rgba(100, 255, 218, 0.3);
-  color: var(--accent);
+  border-color: var(--win-98-bevel-dark) var(--win-98-bevel-light) var(--win-98-bevel-light) var(--win-98-bevel-dark);
+  background: #b8b8b8;
+  box-shadow: none;
+  transform: translateY(1px);
 }
 
 .projects__filter-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
-  background: rgba(255,255,255,0.06);
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
+  min-width: 18px;
+  height: 14px;
+  padding: 0 3px;
+  background: #a0a0a0;
+  border: 1px solid #808080;
+  font-size: 9px;
+  font-family: 'Courier New', monospace;
+  color: #000000;
 }
 
-.projects__filter.active .projects__filter-count {
-  background: rgba(100, 255, 218, 0.15);
-}
-
-/* Grid */
+/* ── Grid ── */
 .projects__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 20px;
 }
 
-/* Project card */
+/* ── Project card — Win98 Paint window ── */
+@keyframes paint-glitch {
+  0%   { clip-path: inset(0 0 0 0); }
+  20%  { clip-path: inset(0 2px 0 -2px); }
+  40%  { clip-path: inset(2px 0 -2px 0); }
+  60%  { clip-path: inset(-2px -2px 2px 2px); }
+  80%  { clip-path: inset(2px -2px -2px 2px); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+
 .project-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 20px;
-  overflow: hidden;
-  transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
-  animation: fadeInUp 0.5s ease both;
   display: flex;
   flex-direction: column;
+  background: var(--win-98-gray);
+  border: 2px solid;
+  border-color: var(--win-98-bevel-light) var(--win-98-bevel-dark) var(--win-98-bevel-dark) var(--win-98-bevel-light);
+  border-radius: 0;
+  overflow: hidden;
+  animation: fadeInUp 0.5s ease both;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.9),
+    3px 3px 0 rgba(0,0,0,0.45);
+  transition: transform var(--transition), box-shadow var(--transition);
+  position: relative;
 }
 
 .project-card:hover {
-  border-color: var(--color-border-hover);
-  transform: translateY(-6px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(100, 255, 218, 0.05);
+  transform: scale(1.015);
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.9),
+    4px 4px 0 rgba(0,0,0,0.5),
+    0 0 20px rgba(0,0,128,0.2);
+  animation: fadeInUp 0.5s ease both, paint-glitch 0.08s linear 1;
 }
 
-.project-card--featured {
-  grid-column: span 1;
-}
-
-/* Illustration */
-.project-card__illustration {
-  position: relative;
-  height: 180px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+/* ── Window chrome ── */
+.project-card__chrome {
   flex-shrink: 0;
 }
 
-.project-card__emoji {
-  font-size: 64px;
-  position: relative;
-  z-index: 1;
-  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.5));
-  transition: transform var(--transition-slow);
+/* Title bar — Win98 navy horizontal gradient */
+.project-card__titlebar {
+  background: var(--win-98-titlebar);
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-bottom: 1px solid #000040;
 }
 
-.project-card:hover .project-card__emoji {
-  transform: scale(1.1) translateY(-4px);
+.project-card__win-btns {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  flex-shrink: 0;
 }
 
-/* Decorative shapes */
-.project-card__shape {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.15;
+.project-card__win-title {
+  font-family: 'Arial', sans-serif;
+  font-size: 10px;
+  color: #ffffff;
+  font-weight: bold;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.project-card__shape--1 {
-  width: 120px;
-  height: 120px;
-  background: white;
-  top: -40px;
-  right: -30px;
+/* Menu bar — "File Edit View Image" */
+.project-card__menubar {
+  background: var(--win-98-gray);
+  padding: 2px 4px;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--win-98-bevel-dark);
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.5);
 }
 
-.project-card__shape--2 {
-  width: 80px;
-  height: 80px;
-  background: white;
-  bottom: -20px;
-  left: 20px;
-}
-
-/* Featured badge */
-.project-card__featured-badge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 4px 12px;
-  background: rgba(100, 255, 218, 0.15);
-  border: 1px solid rgba(100, 255, 218, 0.3);
-  color: var(--accent);
+.project-card__menubar span {
+  font-family: 'Arial', sans-serif;
   font-size: 11px;
-  font-weight: 600;
-  border-radius: 100px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  color: #000000;
+  padding: 1px 7px;
+  cursor: default;
+  transition: background 0.05s, color 0.05s;
 }
 
-/* Body */
-.project-card__body {
-  padding: 24px;
+.project-card__menubar span:hover {
+  background: #000080;
+  color: #ffffff;
+}
+
+/* ── Dark canvas area ── */
+.project-card__page {
+  flex: 1;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  flex: 1;
+  min-height: 0;
+  background: #1a1a2e;
+  border: 2px solid;
+  border-color: var(--win-98-bevel-dark) var(--win-98-bevel-light) var(--win-98-bevel-light) var(--win-98-bevel-dark);
+  margin: 5px;
+}
+
+/* Favicon / initials */
+.project-card__favicon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: rgba(0, 0, 128, 0.4);
+  border: 1px solid rgba(98, 184, 232, 0.3);
+  font-family: var(--font-heading);
+  font-size: 16px;
+  color: var(--accent);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
 }
 
 .project-card__title {
   font-family: var(--font-heading);
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 400;
   color: var(--text-primary);
-  margin-bottom: 10px;
-  letter-spacing: -0.3px;
+  margin-bottom: 7px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: color var(--transition);
+}
+
+.project-card:hover .project-card__title {
+  color: var(--accent);
+  animation: glitch-fast 0.3s ease;
 }
 
 .project-card__desc {
-  font-size: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   color: var(--text-secondary);
-  line-height: 1.6;
-  margin-bottom: 16px;
+  line-height: 1.7;
+  margin-bottom: 12px;
   flex: 1;
 }
 
@@ -191,70 +230,109 @@
 .project-card__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 20px;
+  gap: 4px;
+  margin-bottom: 12px;
 }
 
 .project-card__tag {
-  padding: 4px 10px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-muted);
+  padding: 2px 7px;
+  background: rgba(0, 0, 128, 0.25);
+  border: 1px solid rgba(98, 184, 232, 0.18);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
-/* Links */
+/* Links — Win98 gray bevel buttons */
 .project-card__links {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   margin-top: auto;
 }
 
 .project-card__link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
+  gap: 5px;
+  padding: 4px 11px;
+  background: var(--win-98-gray);
+  border: 2px solid;
+  border-color: var(--win-98-bevel-light) var(--win-98-bevel-dark) var(--win-98-bevel-dark) var(--win-98-bevel-light);
+  border-radius: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
   text-decoration: none;
-  transition: all var(--transition);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #000000;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.8), 1px 1px 0 rgba(0,0,0,0.3);
+  transition: background var(--transition);
 }
 
-.project-card__link--ghost {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--color-border);
-  color: var(--text-secondary);
+.project-card__link:hover {
+  background: #d0d0d0;
 }
 
-.project-card__link--ghost:hover {
-  background: rgba(255,255,255,0.08);
-  color: var(--text-primary);
+.project-card__link:active {
+  border-color: var(--win-98-bevel-dark) var(--win-98-bevel-light) var(--win-98-bevel-light) var(--win-98-bevel-dark);
+  background: #b0b0b0;
+  transform: translateY(1px);
+  box-shadow: none;
 }
 
+/* Keep both variants same gray; __primary gets a subtle indicator */
+.project-card__link--ghost {}
 .project-card__link--primary {
-  background: var(--accent-dim);
-  border: 1px solid rgba(100, 255, 218, 0.25);
-  color: var(--accent);
+  font-weight: bold;
 }
 
-.project-card__link--primary:hover {
-  background: rgba(100, 255, 218, 0.2);
-  border-color: rgba(100, 255, 218, 0.5);
+/* ── Status bar ── */
+.project-card__statusbar {
+  background: var(--win-98-gray);
+  padding: 2px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px solid var(--win-98-bevel-dark);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+  flex-shrink: 0;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .projects__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.project-card__status-done {
+  font-family: 'Arial', sans-serif;
+  font-size: 10px;
+  color: #006600;
+  font-weight: bold;
+  white-space: nowrap;
 }
 
-@media (max-width: 640px) {
-  .projects__grid {
-    grid-template-columns: 1fr;
-  }
+.project-card__status-sep {
+  color: var(--win-98-bevel-dark);
+  font-size: 10px;
 }
+
+.project-card__statusbar span:not(.project-card__status-done):not(.project-card__status-sep) {
+  font-family: 'Arial', sans-serif;
+  font-size: 10px;
+  color: #000000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Featured badge */
+.project-card__featured-badge {
+  padding: 1px 7px;
+  background: #000080;
+  color: #ffffff;
+  font-family: 'Arial', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) { .projects__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .projects__grid { grid-template-columns: 1fr; } }

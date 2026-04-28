@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, memo } from 'react'
 import './Skills.css'
 
-function SkillBar({ name, level, animate }) {
+const SkillBar = memo(function SkillBar({ name, level, animate }) {
   return (
     <div className="skill-bar">
       <div className="skill-bar__header">
@@ -16,16 +16,32 @@ function SkillBar({ name, level, animate }) {
       </div>
     </div>
   )
+})
+
+const CATEGORY_ABBR = {
+  'Frontend': 'FE',
+  'Backend': 'BE',
+  'Инструменты': 'DEV',
 }
 
-function SkillCard({ category, animate }) {
+const SkillCard = memo(function SkillCard({ category, animate }) {
+  const abbr = CATEGORY_ABBR[category.title] || category.title.slice(0, 3).toUpperCase()
+
   return (
     <div className="skill-card">
-      <div className="skill-card__header">
-        <span className="skill-card__icon">{category.icon}</span>
-        <h3 className="skill-card__title">{category.title}</h3>
+      {/* 2000s window title bar */}
+      <div className="skill-card__titlebar">
+        <div className="skill-card__win-btns">
+          <span className="win-btn win-btn--r" />
+          <span className="win-btn win-btn--y" />
+          <span className="win-btn win-btn--g" />
+        </div>
+        <span className="skill-card__abbr">[{abbr}]</span>
+        <span className="skill-card__win-title">{category.title}.exe</span>
       </div>
-      <div className="skill-card__bars">
+
+      {/* Content */}
+      <div className="skill-card__body">
         {category.skills.map((skill) => (
           <SkillBar
             key={skill.id ?? skill.name}
@@ -37,22 +53,22 @@ function SkillCard({ category, animate }) {
       </div>
     </div>
   )
-}
+})
 
 export default function Skills() {
   const ref = useRef(null)
   const [animate, setAnimate] = useState(false)
   const [categories, setCategories] = useState([])
 
-  // Fetch skills from API
   useEffect(() => {
-    fetch('/api/skills')
+    const controller = new AbortController()
+    fetch('/api/skills', { signal: controller.signal })
       .then(r => r.json())
       .then(data => setCategories(data.categories || []))
-      .catch(() => {})
+      .catch(err => { if (err.name !== 'AbortError') console.error(err) })
+    return () => controller.abort()
   }, [])
 
-  // Intersection observer — trigger animation when section is visible
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -67,14 +83,11 @@ export default function Skills() {
     return () => observer.disconnect()
   }, [])
 
-  // If data loads after section was already in view, animate immediately
   useEffect(() => {
     if (categories.length === 0) return
     if (!ref.current) return
     const rect = ref.current.getBoundingClientRect()
-    if (rect.top < window.innerHeight * 0.9) {
-      setAnimate(true)
-    }
+    if (rect.top < window.innerHeight * 0.9) setAnimate(true)
   }, [categories])
 
   return (
@@ -83,26 +96,25 @@ export default function Skills() {
 
       <div className="container">
         <div className="section-header">
-          <span className="section-label">Что я умею</span>
-          <h2 className="section-title">Навыки &amp; Технологии</h2>
+          <span className="section-label">What I know</span>
+          <h2 className="section-title">Skills &amp; Stack</h2>
           <p className="section-subtitle">
-            Стек технологий, которые я использую для создания современных веб-приложений
+            Technologies I use to build modern web applications
           </p>
         </div>
 
         <div className="skills__grid">
-          {categories.map((cat, i) => (
+          {categories.map((cat) => (
             <SkillCard
               key={cat.title}
               category={cat}
               animate={animate}
-              style={{ animationDelay: `${i * 0.1}s` }}
             />
           ))}
         </div>
 
         <div className="skills__badges">
-          <p className="skills__badges-label">Также работаю с:</p>
+          <p className="skills__badges-label">Also work with:</p>
           <div className="skills__badges-list">
             {['Redux', 'Zustand', 'Jest', 'Vitest', 'CI/CD', 'AWS', 'Nginx', 'GraphQL', 'Prisma', 'Next.js'].map((tag) => (
               <span key={tag} className="skills__badge">{tag}</span>

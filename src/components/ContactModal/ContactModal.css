@@ -1,100 +1,150 @@
+/* ======================================================
+   CONTACT MODAL — 2000s DIALOG WINDOW
+   ====================================================== */
+
 .cm-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(8, 11, 20, 0.85);
-  backdrop-filter: blur(6px);
+  background: rgba(4, 4, 10, 0.85);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 2000;
   padding: 16px;
-  animation: fadeIn 0.2s ease;
+  animation: fadeIn 0.18s ease;
 }
 
+.cm-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px, transparent 2px,
+    rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+}
+
+/* ── Window frame ── */
 .cm-card {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 20px;
-  padding: 40px;
+  border: 2px solid;
+  border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
+  border-radius: 0;
   width: 100%;
-  max-width: 480px;
+  max-width: 440px;
   position: relative;
-  animation: fadeInUp 0.25s ease;
-  box-shadow: var(--shadow-lg), 0 0 60px rgba(100, 255, 218, 0.05);
+  animation: fadeInUp 0.22s ease;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.05),
+    4px 4px 0 rgba(0,0,0,0.6),
+    0 20px 60px rgba(0,0,0,0.95);
+  overflow: hidden;
 }
 
+/* ── Title bar (via close button's sibling context) ── */
 .cm-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  background: transparent;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  color: var(--text-secondary);
-  width: 36px;
-  height: 36px;
+  top: 6px;
+  right: 7px;
+  background: var(--win-btn-r);
+  border: 1px solid;
+  border-color: rgba(255,255,255,0.3) rgba(0,0,0,0.4) rgba(0,0,0,0.4) rgba(255,255,255,0.3);
+  color: white;
+  width: 16px;
+  height: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: border-color var(--transition), color var(--transition);
-}
-.cm-close:hover {
-  border-color: var(--color-border-hover);
-  color: var(--text-primary);
+  transition: filter var(--transition);
+  z-index: 10;
+  padding: 0;
 }
 
+.cm-close:hover { filter: brightness(1.2); }
+
+/* Inject title bar via cm-card::before */
+.cm-card::before {
+  content: 'New Message';
+  display: block;
+  padding: 5px 32px 5px 8px;
+  background: var(--win-titlebar);
+  border-bottom: 1px solid #1a4a80;
+  font-family: 'Arial', sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--win-titlebar-text);
+  white-space: nowrap;
+}
+
+/* ── Header ── */
 .cm-header {
-  margin-bottom: 28px;
+  padding: 20px 24px 0;
+  margin-bottom: 18px;
 }
 
 .cm-label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--accent);
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  opacity: 0.7;
 }
+
+.cm-label::before { content: '> '; opacity: 0.5; }
 
 .cm-title {
   font-family: var(--font-heading);
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 30px;
+  font-weight: 400;
   color: var(--text-primary);
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
+/* ── Form ── */
 .cm-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
+  padding: 0 24px 24px;
 }
 
 .cm-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .cm-field label {
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 10px;
   color: var(--text-secondary);
-  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
+
+.cm-field label::before { content: '$ '; color: var(--accent); opacity: 0.5; }
 
 .cm-field input,
 .cm-field textarea {
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
+  background: rgba(98, 184, 232, 0.03);
+  border: 1px solid rgba(98, 184, 232, 0.12);
+  border-radius: 0;
   color: var(--text-primary);
-  padding: 11px 14px;
-  font-size: 14px;
-  font-family: var(--font-body);
+  padding: 9px 12px;
+  font-size: 13px;
+  font-family: var(--font-mono);
   outline: none;
-  transition: border-color var(--transition);
+  transition: border-color var(--transition), box-shadow var(--transition);
   resize: none;
+  letter-spacing: 0.3px;
 }
 
 .cm-field input::placeholder,
@@ -104,96 +154,105 @@
 
 .cm-field input:focus,
 .cm-field textarea:focus {
-  border-color: var(--accent);
+  border-color: rgba(98, 184, 232, 0.45);
+  box-shadow: 0 0 10px rgba(98,184,232,0.07);
 }
 
 .cm-field input:disabled,
-.cm-field textarea:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+.cm-field textarea:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .cm-error {
-  color: #f87171;
-  font-size: 13px;
-  margin-top: -4px;
+  color: var(--accent-red);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  margin-top: -2px;
 }
 
+.cm-error::before { content: '! '; }
+
+/* ── Submit button (yellow 2000s bevel) ── */
 .cm-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: var(--accent);
-  color: #080b14;
-  border: none;
-  border-radius: 10px;
-  padding: 13px 24px;
-  font-size: 15px;
-  font-weight: 700;
-  font-family: var(--font-body);
+  background: linear-gradient(180deg, #fff0a0 0%, #f0c040 100%);
+  border: 2px solid;
+  border-color: #ffffd0 #806800 #806800 #ffffd0;
+  color: #3a2000;
+  padding: 9px 22px;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  text-transform: none;
   cursor: pointer;
-  transition: opacity var(--transition), transform var(--transition);
+  box-shadow: 1px 1px 0 rgba(0,0,0,0.25);
+  transition: filter var(--transition);
   margin-top: 4px;
 }
 
 .cm-btn:hover:not(:disabled) {
-  opacity: 0.85;
-  transform: translateY(-1px);
+  background: linear-gradient(180deg, #f0e070 0%, #e0b028 100%);
+  border-color: #fff0c0 #706000 #706000 #fff0c0;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
 }
 
-.cm-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.cm-btn:active:not(:disabled) {
+  background: linear-gradient(180deg, #e0b028 0%, #f0e070 100%);
+  border-color: #806800 #ffffd0 #ffffd0 #806800;
+  transform: translateY(1px);
+  box-shadow: none;
 }
+
+.cm-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .cm-spinner {
   display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(8, 11, 20, 0.3);
-  border-top-color: #080b14;
+  width: 13px;
+  height: 13px;
+  border: 1px solid rgba(240, 192, 64, 0.25);
+  border-top-color: var(--accent-2);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Success state */
+/* ── Success ── */
 .cm-success {
   text-align: center;
-  padding: 20px 0;
+  padding: 36px 24px;
 }
 
 .cm-success-icon {
-  width: 72px;
-  height: 72px;
-  background: var(--accent-dim);
-  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  background: rgba(98, 184, 232, 0.07);
+  border: 1px solid rgba(98, 184, 232, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 20px;
+  margin: 0 auto 18px;
   color: var(--accent);
 }
 
 .cm-success h3 {
   font-family: var(--font-heading);
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   margin-bottom: 8px;
+  color: var(--accent);
 }
 
 .cm-success p {
   color: var(--text-secondary);
-  font-size: 15px;
-  margin-bottom: 28px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  margin-bottom: 24px;
 }
 
 @media (max-width: 520px) {
-  .cm-card {
-    padding: 28px 20px;
-  }
+  .cm-header { padding: 18px 18px 0; }
+  .cm-form { padding: 0 18px 18px; }
 }
